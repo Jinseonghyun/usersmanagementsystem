@@ -68,7 +68,7 @@ public class JWTUtils {
      * 비밀 키를 사용하여 JWT를 구문 분석하고 확인 (토큰의 페이로드(클레임)를 검색)
      */
     public String extractUsername(String token) {
-        return extractClaims(token, Claims::getSubject)
+        return extractClaims(token, Claims::getSubject);
     }
 
     // JWT에서 특정 클레임을 추출하는 일반적인 방법
