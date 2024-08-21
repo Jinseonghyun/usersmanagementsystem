@@ -40,28 +40,31 @@ public class SecurityConfig {
                         .requestMatchers("/user/**").hasAnyAuthority("USER")                             //  USER 권한을 가진 사용자만 접근할 수 있도록 제한
                         .requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")               // ADMIN 또는 USER 권한을 가진 사용자만 접근 허용
                         .anyRequest().authenticated())                                                                //  위의 경로에 해당하지 않는 모든 요청은 인증된 사용자만 접근할 수 있도록 합니다.
-                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))         // 세션 관리를 STATELESS로 설정하여, 서버가 세션 상태를 유지하지 않도록 합니다.
+                .authenticationProvider(authenticationProvider()).addFilterBefore(         // 사용자 인증을 처리할 프로바이더를 설정
+                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class          // UsernamePasswordAuthenticationFilter 앞에 추가하여 JWT 기반 인증을 먼저 처리하도록 합니다.
                 );
         return httpSecurity.build();
     }
 
+    /**
+     * 인증 제공자 설정
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(ourUserDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(); // DaoAuthenticationProvider: Spring Security에서 사용자 인증을 처리하는 기본 제공 인증 프로바이더
+        daoAuthenticationProvider.setUserDetailsService(ourUserDetailsService);  // 사용자 정보를 로드할 서비스를 설정
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());        // 비밀번호를 암호화하는 인코더를 설정합니다. 여기서는 BCryptPasswordEncoder를 사용
         return daoAuthenticationProvider;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();  // BCrypt는 강력한 해시 알고리즘을 사용하여 비밀번호를 저장
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {  // AuthenticationManager: Spring Security에서 인증을 관리하는 객체
+        return authenticationConfiguration.getAuthenticationManager();  // AuthenticationConfiguration에서 기본 인증 관리자를 가져와 반환
     }
 }
