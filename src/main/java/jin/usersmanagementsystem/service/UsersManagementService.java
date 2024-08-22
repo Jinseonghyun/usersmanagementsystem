@@ -72,6 +72,7 @@ public class UsersManagementService {
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user); // 인증된 사용자를 위한 새로 고침 토큰을 생성
             response.setStatusCode(200);     // HTTP 상태 코드를 200으로 설정하여 작업 성공을 나타냄
             response.setToken(jwt);          // 생성된 JWT 토큰을 응답에 첨부
+            response.setRole(user.getRole()); // Role 저장
             response.setRefreshToken(refreshToken);       // 성된 새로 고침 토큰을 응답에 첨부
             response.setExpirationTime("24Hrs");          // 토큰 만료 시간을 24시간으로 설정
             response.setMessage("Successfully Logged In");  // 성공 메시지를 설정
