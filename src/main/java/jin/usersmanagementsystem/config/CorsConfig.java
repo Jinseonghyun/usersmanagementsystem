@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration  // 의 @Bean 메서드를 정의하고, Spring 컨테이너에서 관리되는 설정 클래스
 public class CorsConfig {
 
-    @Bean // 자동으로 공개되도록
+    @Bean // 프론트의 다른 도메인과의 장애를 방지하기 위해 cors 설정을 해준다.
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
 
